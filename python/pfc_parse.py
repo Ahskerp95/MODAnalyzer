@@ -13,12 +13,12 @@ from rootpy.io import File as TFile
 
 
 import matplotlib.pyplot as plt
-import rootpy.plotting.root2matplotlib as rplt
+#import rootpy.plotting.root2matplotlib as rplt
 
-output_directory = "/media/aashish/opendata_mod/Feb5/histogrammed/jul8/"
+output_directory = "/home/preksha/Documents/mengproject/"
 
 
-pfc_data_file = "/media/aashish/opendata_mod/Feb5/analyzed/pfc/jul13/data_pfc.dat"
+pfc_data_file = "/home/preksha/Documents/mengproject/analyzed_data.dat"
 pfc_pythia_file = "/media/aashish/opendata_mod/Feb5/analyzed/pfc/jul13/pythia_pfc.dat"
 pfc_herwig_file = "/media/aashish/opendata_mod/Feb5/analyzed/pfc/jul13/herwig_pfc.dat"
 pfc_sherpa_file = "/media/aashish/opendata_mod/Feb5/analyzed/pfc/jul13/sherpa_pfc.dat"
@@ -215,6 +215,8 @@ def write_to_root_file(output_filename, parsed_hists):
 
 def parse_to_root_file(input_filename, output_filename, hist_templates):
 
+    print("parsing")
+
     print "Parsing {} to {}".format(input_filename, output_filename)
 
     parsed_hists = parse_file(
@@ -246,18 +248,18 @@ def root_file_to_hist(input_filename, hist_templates):
     return hists
 
 
-def parse_pfc_to_root_files():
+def parse_pfc_to_root_files(output_directory, pfc_data_file):
     hist_templates = hists.get_pfc_hists()
 
-    # parse_to_root_file(input_filename=pfc_data_file, output_filename=output_directory +
-    #                    "data_pfc.root", hist_templates=hist_templates)
+    parse_to_root_file(input_filename=pfc_data_file, output_filename=output_directory +
+                        "data_pfc.root", hist_templates=hist_templates)
     # parse_to_root_file(input_filename=pfc_pythia_file, output_filename=output_directory +
     #                    "pythia_pfc.root", hist_templates=hist_templates)
     # parse_to_root_file(input_filename=pfc_herwig_file,
     # output_filename=output_directory +
     # "herwig_pfc.root", hist_templates=hist_templates)
-    parse_to_root_file(input_filename=pfc_sherpa_file, output_filename=output_directory +
-                       "sherpa_pfc.root", hist_templates=hist_templates)
+    #parse_to_root_file(input_filename=pfc_sherpa_file, output_filename=output_directory +
+     #                  "sherpa_pfc.root", hist_templates=hist_templates)
 
 
 def load_pfc_root_files_to_hist():
@@ -265,12 +267,13 @@ def load_pfc_root_files_to_hist():
 
     filenames = ['data_pfc.root', 'pythia_pfc.root',
                  'herwig_pfc.root', 'sherpa_pfc.root']
-    # filenames = ['data_pfc.root', 'data_pfc.root', 'data_pfc.root', 'data_pfc.root']
+    filenames = ['data_pfc.root', 'data_pfc.root', 'data_pfc.root', 'data_pfc.root']
     # filenames = ['data_pfc.root', 'pythia_pfc.root', 'pythia_pfc.root',
     # 'pythia_pfc.root']
 
     return [root_file_to_hist(output_directory + filename, hist_templates) for filename in filenames]
 
+"""
 
 if __name__ == "__main__":
 
@@ -279,3 +282,5 @@ if __name__ == "__main__":
     parse_pfc_to_root_files()
 
     pass
+
+"""

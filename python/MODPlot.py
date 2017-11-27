@@ -27,6 +27,8 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import matplotlib.patches as mpatches
 from matplotlib.legend_handler import HandlerLine2D
+import importlib
+importlib.import_module('mpl_toolkits.mplot3d').__path__
 from mpl_toolkits.mplot3d import axes3d
 from matplotlib import cm
 
@@ -66,7 +68,7 @@ from scipy.stats import binned_statistic
 import rootpy.plotting.views
 
 
-logo_location = "/home/aashish/root/macros/MODAnalyzer/mod_logo.png"
+logo_location = "/home/preksha/Documents/mengproject/MODAnalyzer/mod_logo.png"
 # logo_text = "v1.3"
 logo_text = ""
 

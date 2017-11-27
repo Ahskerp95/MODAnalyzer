@@ -29,7 +29,7 @@ import rootpy.plotting.root2matplotlib as rplt
 
 # output_directory = "/media/aashish/opendata_mod/Feb5/histogrammed-Apr-17-backup/"
 # output_directory = "/media/aashish/opendata_mod/Feb5/histogrammed/sat-jul-8-2017-backup/"
-output_directory = "/media/aashish/opendata_mod/Feb5/histogrammed/jul-23/"
+output_directory = "/home/preksha/Documents/mengproject/"
 
 
 # output_directory = "/media/aashish/My Files/Dropbox (MIT)/histogrammed/"
@@ -38,7 +38,7 @@ output_directory = "/media/aashish/opendata_mod/Feb5/histogrammed/jul-23/"
 # data_file   = "/media/aashish/My Files/Dropbox (MIT)/Research/data/MC/analyzed/pristine.dat"
 # data_file   = "/home/aashish/data.dat"
 # data_file   = "/home/aashish/Feb5/analyzed/pristine.dat"
-data_file = "/media/aashish/opendata_mod/Feb5/analyzed/pristine.dat"
+data_file = "/home/preksha/Documents/mengproject/analyzed_data.dat"
 # data_file   = "/media/aashish/opendata_mod/Feb5/analyzed/pt/0004.dat"
 # data_file   = "/home/aashish/root/macros/MODAnalyzer/abcde.dat"
 # data_file   = "/media/aashish/opendata_mod/Feb5/analyzed/pt.dat"
@@ -460,7 +460,7 @@ def root_file_to_hist(input_filename, hist_templates, is_this_data):
     return hists
 
 
-def parse_to_root_files():
+def parse_to_root_files(output_directory, data_file):
     hist_templates = hists.multi_page_plot_hist_templates()
     log_hist_templates = hists.multi_page_log_plot_hist_templates()
 
@@ -488,20 +488,20 @@ def load_root_files_to_hist(log=False):
         filenames = ["data.root", "pythia.root", "herwig.root", "sherpa.root"]
         # filenames = ["data.root", "pythia.root", "sherpa.root", "sherpa.root"]
         # filenames = ["data.root", "pythia.root", "herwig.root", "pythia.root"]
-        # filenames = ["data.root", "data.root", "data.root", "data.root"]
+        filenames = ["data.root", "data.root", "data.root", "data.root"]
         # filenames = ["pt.root", "pt.root", "pt.root", "pt.root"]
     else:
         hist_templates = hists.multi_page_log_plot_hist_templates()
-        filenames = ["data_log.root", "pythia_log.root",
-                     "herwig_log.root", "sherpa_log.root"]
+        #filenames = ["data_log.root", "pythia_log.root",
+        #            "herwig_log.root", "sherpa_log.root"]
         # filenames = ["data_log.root", "pythia_log.root", "sherpa_log.root", "sherpa_log.root"]
         # filenames = ["data_log.root", "pythia_log.root", "pythia_log.root", "pythia_log.root"]
-        # filenames = ["data_log.root", "data_log.root", "data_log.root", "data_log.root"]
+        filenames = ["data_log.root", "data_log.root", "data_log.root", "data_log.root"]
         # filenames = ["pt.root", "pt.root", "pt.root", "pt.root"]
 
     return [root_file_to_hist(output_directory + filename, hist_templates, is_this_data) for filename, is_this_data in zip(filenames, [True, False, False, False])]
 
-
+"""
 if __name__ == "__main__":
 
     # filter_events(input_filename=pythia_file, output_directory=output_directory, source="pythia", all_mod_hists=(hists.multi_page_plot_hist_templates(), hists.multi_page_log_plot_hist_templates()))
@@ -511,3 +511,5 @@ if __name__ == "__main__":
     # load_root_files_to_hist()
 
     pass
+
+"""

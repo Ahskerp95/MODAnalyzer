@@ -280,8 +280,7 @@ def multi_page_log_plot_hist_templates():
 
             additional_text = [([(0.85, 0.97), (0.87, 0.97), (0.87, 0.97), (0.87, 0.97)][i], 'upper right',
                                 "$p_T^{\mathrm{PFC}} > 1.0~\mathrm{GeV}$ \n AK5; $" + eta_boundary_label + "$ \n $p_T^{\mathrm{jet}} \in [" + str(pT_boundaries[i]) + ", " + str(pT_boundaries[i + 1]) + "]~\mathrm{GeV}$")]
-            all_hists['thrust_pre_SD'].append(MODHist(copy.deepcopy(thrust_hist), conditions=default_conditions, x_scale='log', use_prescale=False, y_range=[(
-                0.0, 0.8), (0.0, 0.75), (0.0, 0.65), (0.0, 0.6)][i], x_label="Thrust", y_label="Probability Density", additional_text=additional_text, legend_location=('upper left', (0.0, 1.0))))
+            all_hists['thrust_pre_SD'].append(MODHist(copy.deepcopy(thrust_hist), conditions=default_conditions, x_scale='log', use_prescale=False, y_range=[(                0.0, 0.8), (0.0, 0.75), (0.0, 0.65), (0.0, 0.6)][i], x_label="Thrust", y_label="Probability Density", additional_text=additional_text, legend_location=('upper left', (0.0, 1.0))))
 
             additional_text = [([(0.85, 0.97), (0.87, 0.97), (0.87, 0.97), (0.87, 0.97)][i], 'upper right',
                                 "$p_T^{\mathrm{PFC}} > 1.0~\mathrm{GeV}$ \n AK5; $" + eta_boundary_label + "$ \n $p_T^{\mathrm{jet}} \in [" + str(pT_boundaries[i]) + ", " + str(pT_boundaries[i + 1]) + "]~\mathrm{GeV}$")]

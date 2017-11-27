@@ -78,9 +78,9 @@ def compile_sources(parsed_hists):
     data_hists, pythia_hists, herwig_hists, sherpa_hists = parsed_hists[
         0], parsed_hists[1], parsed_hists[2], parsed_hists[3]
 
-    theory_hists = parse_theory_file()
+    #theory_hists = parse_theory_file()
 
-    return [data_hists, theory_hists, pythia_hists, herwig_hists, sherpa_hists]
+    return [data_hists, pythia_hists, herwig_hists, sherpa_hists]
 
 
 def compile_data_and_pythia(all_hists, variables):
@@ -105,7 +105,7 @@ def compile_hists(var, parsed_hists, x_scale='linear'):
     compilation = []
 
     data_hists, pythia_hists, herwig_hists, sherpa_hists = parsed_hists[
-        0], parsed_hists[2], parsed_hists[3], parsed_hists[4]
+        0], parsed_hists[1], parsed_hists[2], parsed_hists[3]
 
     # print data_hists, data_hists, var
 
@@ -168,20 +168,24 @@ def compile_hists_with_theory(var, parsed_hists, x_scale='linear'):
 
 
 default_dir = "plots/Version 6/"
+output_directory = sys.argv[1]
+data_file = output_directory + "analyzed_data.dat"
+print(output_directory)
 
 
 start = time.time()
 
 
+parsed_file = parse.parse_to_root_files(output_directory, data_file)
 parsed_linear = parse.load_root_files_to_hist(log=False)
 parsed_hists = compile_sources(parsed_linear)
 
-parsed_log = parse.load_root_files_to_hist(log=True)
-parsed_log_hists = compile_sources(parsed_log)
+#parsed_log = parse.load_root_files_to_hist(log=True)
+#parsed_log_hists = compile_sources(parsed_log)
 
-
-# parsed_pfc = pfc_parse.load_pfc_root_files_to_hist()
-# parsed_pfc_hists = compile_sources(parsed_pfc)
+pfc_parsed = pfc_parse.parse_pfc_to_root_files(output_directory, data_file)
+parsed_pfc = pfc_parse.load_pfc_root_files_to_hist()
+parsed_pfc_hists = compile_sources(parsed_pfc)
 
 
 end = time.time()
@@ -192,333 +196,10 @@ print "Finished parsing all files in {} seconds. Now plotting them!".format(end 
 
 start = time.time()
 
+create_multi_page_plot(filename=default_dir + "hardest_jet_phi_all_linear.pdf", hists=compile_hists('hardest_phi', parsed_hists))
 
-# create_multi_page_plot(filename=default_dir + "pfc_pT.pdf", hists=compile_hists('pfc_pT', parsed_pfc_hists))
-
-
-# create_multi_page_plot(filename=default_dir + "pfc_eta.pdf",
-#                        hists=compile_hists('pfc_eta', parsed_pfc_hists))
-
-
-create_multi_page_plot(filename=default_dir + "hardest_jet_pT_all_linear.pdf",
-                       hists=compile_hists('hardest_pT', parsed_hists))
-# create_data_only_plot(filename=default_dir + "hardest_jet_pT_jec_all_linear.pdf", hists=[[parsed_linear[0]['hardest_pT'][i], parsed_linear[0]['uncor_hardest_pT'][i]] for i in range(len(parsed_linear[0]['uncor_hardest_pT']))], labels=[
-#     "Jet Energy Corrected", "Jet Energy Uncorrected"], types=["error", "error"], colors=["black", "orange"], line_styles=[1, 1], ratio_to_label="Ratio to\nCorrected", ratio_to_index=0, text_outside_the_frame=True)
-
-
-# create_multi_page_plot(filename=default_dir + "hardest_jet_phi_all_linear.pdf",
-#                        hists=compile_hists('hardest_phi', parsed_hists))
-# create_multi_page_plot(filename=default_dir + "hardest_jet_eta_all_linear.pdf",
-#                        hists=compile_hists('hardest_eta', parsed_hists))
-
-
-# create_multi_page_plot(filename=default_dir + "basic_sub_mul_all_linear.pdf",
-#                        hists=compile_hists('mul_pre_SD', parsed_hists))
-# create_multi_page_plot(filename=default_dir + "basic_sub_mul_track_linear.pdf",
-#                        hists=compile_hists('track_mul_pre_SD', parsed_hists))
-
-
-# create_data_only_plot(filename=default_dir + "basic_sub_mul_softdrop_all_linear.pdf", hists=compile_data_and_pythia([parsed_hists[0], parsed_hists[2]], variables=['mul_pre_SD', 'mul_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=[
-#                       "error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index={0: 2, 1: 3, 2: 2, 3: 3}, text_outside_the_frame=True)
-# create_data_only_plot(filename=default_dir + "basic_sub_mul_softdrop_track_linear.pdf", hists=compile_data_and_pythia([parsed_hists[0], parsed_hists[2]], variables=['track_mul_pre_SD', 'track_mul_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=[
-#                       "error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index={0: 2, 1: 3, 2: 2, 3: 3}, text_outside_the_frame=True)
-
-
-# create_multi_page_plot(filename=default_dir + "basic_sub_mass_all_linear.pdf",
-#                        hists=compile_hists('mass_pre_SD', parsed_hists))
-# create_multi_page_plot(filename=default_dir + "basic_sub_mass_track_linear.pdf",
-#                        hists=compile_hists('track_mass_pre_SD', parsed_hists))
-
-# create_data_only_plot(filename=default_dir + "basic_sub_mass_softdrop_all_linear.pdf", hists=compile_data_and_pythia([parsed_hists[0], parsed_hists[2]], variables=['mass_pre_SD', 'mass_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=[
-#                       "error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index={0: 2, 1: 3, 2: 2, 3: 3}, text_outside_the_frame=True)
-# create_data_only_plot(filename=default_dir + "basic_sub_mass_softdrop_track_linear.pdf", hists=compile_data_and_pythia([parsed_hists[0], parsed_hists[2]], variables=['track_mass_pre_SD', 'track_mass_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=[
-#                       "error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index={0: 2, 1: 3, 2: 2, 3: 3}, text_outside_the_frame=True)
-
-
-# create_multi_page_plot(filename=default_dir + "basic_sub_pTD_all_log.pdf",
-#                        hists=compile_hists('pT_D_pre_SD', parsed_log_hists, x_scale='log'), x_scale='log')
-# create_multi_page_plot(filename=default_dir + "basic_sub_pTD_track_log.pdf",
-#                        hists=compile_hists('track_pT_D_pre_SD', parsed_log_hists,
-#                                            x_scale='log'), x_scale='log')
-
-# create_data_only_plot(filename=default_dir + "basic_sub_pTD_softdrop_all_log.pdf", hists=compile_data_and_pythia([parsed_log_hists[0], parsed_log_hists[2]], variables=['pT_D_pre_SD', 'pT_D_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=[
-#                       "error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index={0: 2, 1: 3, 2: 2, 3: 3}, text_outside_the_frame=True)
-# create_data_only_plot(filename=default_dir + "basic_sub_pTD_softdrop_track_log.pdf", hists=compile_data_and_pythia([parsed_log_hists[0], parsed_log_hists[2]], variables=['track_pT_D_pre_SD', 'track_pT_D_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=[
-#                       "error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index={0: 2, 1: 3, 2: 2, 3: 3}, text_outside_the_frame=True)
-
-
-# create_multi_page_plot(filename=default_dir + "basic_sub_lha_all_log.pdf",
-#                        hists=compile_hists('LHA_pre_SD', parsed_log_hists), x_scale='log')
-# create_multi_page_plot(filename=default_dir + "basic_sub_lha_track_log.pdf",
-#                        hists=compile_hists(
-#                            'track_LHA_pre_SD', parsed_log_hists),
-#                        x_scale='log')
-
-# create_data_only_plot(filename=default_dir + "basic_sub_lha_softdrop_all_log.pdf", hists=compile_data_and_pythia([parsed_log_hists[0], parsed_log_hists[2]], variables=['LHA_pre_SD', 'LHA_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=[
-#                       "error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index={0: 2, 1: 3, 2: 2, 3: 3}, text_outside_the_frame=True)
-# create_data_only_plot(filename=default_dir + "basic_sub_lha_softdrop_track_log.pdf", hists=compile_data_and_pythia([parsed_log_hists[0], parsed_log_hists[2]], variables=['track_LHA_pre_SD', 'track_LHA_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=[
-#                       "error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index={0: 2, 1: 3, 2: 2, 3: 3}, text_outside_the_frame=True)
-
-
-# create_multi_page_plot(filename=default_dir + "basic_sub_width_all_log.pdf",
-#                        hists=compile_hists('width_pre_SD', parsed_log_hists), x_scale='log')
-# create_multi_page_plot(filename=default_dir + "basic_sub_width_track_log.pdf",
-#                        hists=compile_hists(
-#                            'track_width_pre_SD', parsed_log_hists),
-#                        x_scale='log')
-
-# create_data_only_plot(filename=default_dir + "basic_sub_width_softdrop_all_log.pdf", hists=compile_data_and_pythia([parsed_log_hists[0], parsed_log_hists[2]], variables=['width_pre_SD', 'width_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=[
-#                       "error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index={0: 2, 1: 3, 2: 2, 3: 3}, text_outside_the_frame=True)
-# create_data_only_plot(filename=default_dir + "basic_sub_width_softdrop_track_log.pdf", hists=compile_data_and_pythia([parsed_log_hists[0], parsed_log_hists[2]], variables=['track_width_pre_SD', 'track_width_post_SD']), labels=[
-#                       "Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=["error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index={0: 2, 1: 3, 2: 2, 3: 3}, text_outside_the_frame=True)
-
-
-# create_multi_page_plot(filename=default_dir + "basic_sub_thrust_all_log.pdf",
-#                        hists=compile_hists('thrust_pre_SD', parsed_log_hists), x_scale='log')
-# create_multi_page_plot(filename=default_dir + "basic_sub_thrust_track_log.pdf",
-#                        hists=compile_hists(
-#                            'track_thrust_pre_SD', parsed_log_hists),
-#                        x_scale='log')
-
-# create_data_only_plot(filename=default_dir + "basic_sub_thrust_softdrop_all_log.pdf", hists=compile_data_and_pythia([parsed_log_hists[0], parsed_log_hists[2]], variables=['thrust_pre_SD', 'thrust_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=[
-#                       "error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index={0: 2, 1: 3, 2: 2, 3: 3}, text_outside_the_frame=True)
-# create_data_only_plot(filename=default_dir + "basic_sub_thrust_softdrop_track_log.pdf", hists=compile_data_and_pythia([parsed_log_hists[0], parsed_log_hists[2]], variables=['track_thrust_pre_SD', 'track_thrust_post_SD']), labels=[
-#                       "Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=["error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index={0: 2, 1: 3, 2: 2, 3: 3}, text_outside_the_frame=True)
-
-
-# create_multi_page_plot(filename=default_dir + "softdrop_frac_pT_loss_log.pdf", hists=compile_hists(
-#     'frac_pT_loss', parsed_log_hists, x_scale='log'), theory=False, x_scale='log')
-
-
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/zg/zg_05.pdf",
-#                        hists=compile_hists_with_theory('zg_05', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/zg/zg_05.pdf",
-#                        hists=compile_hists_with_theory('track_zg_05', parsed_hists),
-#                        theory=True)
-
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/rg/rg_05.pdf",
-#                        hists=compile_hists_with_theory('rg_05', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/rg/rg_05.pdf",
-#                        hists=compile_hists_with_theory('track_rg_05', parsed_hists),
-#                        theory=True)
-
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/zg/zg_05.pdf",
-#                        hists=compile_hists_with_theory('zg_05', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/zg/zg_05.pdf",
-#                        hists=compile_hists_with_theory('track_zg_05', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/rg/rg_05.pdf",
-#                        hists=compile_hists_with_theory('rg_05', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/rg/rg_05.pdf",
-#                        hists=compile_hists_with_theory('track_rg_05', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/e1/e1_05.pdf",
-#                        hists=compile_hists_with_theory('e1_05', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/e1/e1_05.pdf",
-#                        hists=compile_hists_with_theory('track_e1_05', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/e2/e2_05.pdf",
-#                        hists=compile_hists_with_theory('e2_05', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/e2/e2_05.pdf",
-#                        hists=compile_hists_with_theory('track_e2_05', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/e05/e05_05.pdf",
-#                        hists=compile_hists_with_theory('e05_05', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/e05/e05_05.pdf",
-#                        hists=compile_hists_with_theory('track_e05_05', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/zg/zg_10.pdf",
-#                        hists=compile_hists_with_theory('zg_10', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/zg/zg_10.pdf",
-#                        hists=compile_hists_with_theory(
-#                            'track_zg_10', parsed_hists),
-#                        theory=True)
-
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/rg/rg_10.pdf",
-#                        hists=compile_hists_with_theory('rg_10', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/rg/rg_10.pdf",
-#                        hists=compile_hists_with_theory(
-#                            'track_rg_10', parsed_hists),
-#                        theory=True)
-
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/zg/zg_10.pdf",
-#                        hists=compile_hists_with_theory('zg_10', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/zg/zg_10.pdf",
-#                        hists=compile_hists_with_theory('track_zg_10', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/rg/rg_10.pdf",
-#                        hists=compile_hists_with_theory('rg_10', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/rg/rg_10.pdf",
-#                        hists=compile_hists_with_theory('track_rg_10', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/e1/e1_10.pdf",
-#                        hists=compile_hists_with_theory('e1_10', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/e1/e1_10.pdf",
-#                        hists=compile_hists_with_theory('track_e1_10', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/e2/e2_10.pdf",
-#                        hists=compile_hists_with_theory('e2_10', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/e2/e2_10.pdf",
-#                        hists=compile_hists_with_theory('track_e2_10', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/e05/e05_10.pdf",
-#                        hists=compile_hists_with_theory('e05_10', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/e05/e05_10.pdf",
-#                        hists=compile_hists_with_theory('track_e05_10', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/zg/zg_20.pdf",
-#                        hists=compile_hists_with_theory('zg_20', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/zg/zg_20.pdf",
-#                        hists=compile_hists_with_theory(
-#                            'track_zg_20', parsed_hists),
-#                        theory=True)
-
-
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/rg/rg_20.pdf",
-#                        hists=compile_hists_with_theory('rg_20', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/rg/rg_20.pdf",
-#                        hists=compile_hists_with_theory(
-#                            'track_rg_20', parsed_hists),
-#                        theory=True)
-
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/zg/zg_20.pdf",
-#                        hists=compile_hists_with_theory('zg_20', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/zg/zg_20.pdf",
-#                        hists=compile_hists_with_theory('track_zg_20', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/rg/rg_20.pdf",
-#                        hists=compile_hists_with_theory('rg_20', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/rg/rg_20.pdf",
-#                        hists=compile_hists_with_theory('track_rg_20', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/e1/e1_20.pdf",
-#                        hists=compile_hists_with_theory('e1_20', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/e1/e1_20.pdf",
-#                        hists=compile_hists_with_theory('track_e1_20', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/e2/e2_20.pdf",
-#                        hists=compile_hists_with_theory('e2_20', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/e2/e2_20.pdf",
-#                        hists=compile_hists_with_theory('track_e2_20', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-# create_multi_page_plot(filename=default_dir + "theta_g/log/all/e05/e05_20.pdf",
-#                        hists=compile_hists_with_theory('e05_20', parsed_log_hists, x_scale='log'), theory=True, x_scale='log')
-# create_multi_page_plot(filename=default_dir + "theta_g/log/track/e05/e05_20.pdf",
-#                        hists=compile_hists_with_theory('track_e05_20', parsed_log_hists,
-#                                                        x_scale='log'), theory=True, x_scale='log')
-
-
-##########################################################################
-
-
-# create_data_only_plot(filename=default_dir + "jec.pdf", hists=[ [x] for x in parsed_linear[0]['jec'] ], labels=["CMS 2010 Open Data"], types=["error"], colors=["black"], line_styles=[[]], ratio_plot=False)
-# create_data_only_plot(filename=default_dir + "area.pdf", hists=[ [x] for x in parsed_linear[0]['hardest_area'] ], labels=["CMS 2010 Open Data"], types=["error"], colors=["black"], line_styles=[[]], ratio_plot=False)
-
-
-##########################################################################
-
-
-# create_multi_page_plot(filename=default_dir + "hardest_jet_pT_all_log.pdf", hists=compile_hists('hardest_pT', parsed_log_hists, x_scale='log'), x_scale='log')
-# create_data_only_plot(filename=default_dir + "hardest_jet_pT_jec_all_log.pdf", hists=[ [ parsed_log[0]['hardest_pT'][i], parsed_log[0]['uncor_hardest_pT'][i] ] for i in range(len(parsed_log[0]['uncor_hardest_pT'])) ], labels=["Jet Energy Corrected", "Jet Energy Uncorrected"], types=["error", "error"], colors=["black", "orange"], line_styles=[1, 1], ratio_to_label="Ratio to\nCorrected", ratio_to_index=0)
-
-
-# create_multi_page_plot(filename=default_dir + "basic_sub_pTD_all_linear.pdf", hists=compile_hists('pT_D_pre_SD', parsed_hists))# create_multi_page_plot(filename=default_dir + "basic_sub_pTD_track_linear.pdf", hists=compile_hists('track_pT_D_pre_SD', parsed_hists))
-#
-
-
-#
-# create_data_only_plot(filename=default_dir + "all_track_zg_10.pdf", hists=compile_data_and_pythia([ parsed_log_hists[0], parsed_log_hists[2] ], variables=['zg_10', 'track_zg_10']), labels=["Everything", "Track", "Pythia 8.215", "Pythia 8.215 (Track)"], types=["error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [50, 30], [50, 30]], ratio_to_label="Ratio to\nPythia", ratio_to_index=2)
-
-# create_multi_page_plot(filename=default_dir + "softdrop_frac_pT_loss_linear.pdf", hists=compile_hists('frac_pT_loss', parsed_hists))
-#
-#
-# create_multi_page_plot(filename=default_dir + "basic_sub_lha_all_linear.pdf", hists=compile_hists('LHA_pre_SD', parsed_hists))
-# create_multi_page_plot(filename=default_dir + "basic_sub_lha_track_linear.pdf", hists=compile_hists('track_LHA_pre_SD', parsed_hists))
-
-# create_multi_page_plot(filename=default_dir + "basic_sub_width_all_linear.pdf", hists=compile_hists('width_pre_SD', parsed_hists))
-# create_multi_page_plot(filename=default_dir + "basic_sub_width_track_linear.pdf", hists=compile_hists('track_width_pre_SD', parsed_hists))
-
-# create_multi_page_plot(filename=default_dir + "basic_sub_thrust_all_linear.pdf", hists=compile_hists('thrust_pre_SD', parsed_hists))
-# create_multi_page_plot(filename=default_dir + "basic_sub_thrust_track_linear.pdf", hists=compile_hists('track_thrust_pre_SD', parsed_hists))
-
-# create_multi_page_plot(filename=default_dir + "softkill_pT_loss_linear.pdf", hists=compile_hists('softkill_pT_loss', parsed_hists))
-# create_multi_page_plot(filename=default_dir + "softkill_pT_loss_log.pdf", hists=compile_hists('softkill_pT_loss', parsed_log_hists, x_scale='log'), theory=False, x_scale='log')
-
-
-#
-# create_data_only_plot(filename=default_dir + "hardest_jet_pT_softdrop_all_linear.pdf", hists=compile_data_and_pythia([ parsed_hists[0], parsed_hists[2] ], variables=['hardest_pT', 'pT_after_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=["error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index=2)
-#
-# create_data_only_plot(filename=default_dir + "basic_sub_lha_softdrop_track_linear.pdf", hists=compile_data_and_pythia([ parsed_hists[0], parsed_hists[2] ], variables=['track_LHA_pre_SD', 'track_LHA_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=["error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index=2)
-# create_data_only_plot(filename=default_dir + "basic_sub_width_softdrop_track_linear.pdf", hists=compile_data_and_pythia([ parsed_hists[0], parsed_hists[2] ], variables=['track_width_pre_SD', 'track_width_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=["error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index=2)create_data_only_plot(filename=default_dir + "basic_sub_thrust_softdrop_track_linear.pdf", hists=compile_data_and_pythia([ parsed_hists[0], parsed_hists[2] ], variables=['track_thrust_pre_SD', 'track_thrust_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215 (After)"], types=["error", "error", "hist", "hist"], colors=["black", "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia", ratio_to_index=2)
-# create_data_only_plot(filename=default_dir +
-# "basic_sub_lha_softdrop_all_linear.pdf", hists=compile_data_and_pythia([
-# parsed_hists[0], parsed_hists[2] ], variables=['LHA_pre_SD',
-# 'LHA_post_SD']), labels=["Before Soft Drop", "After Soft Drop", "Pythia
-# 8.215 (Before)", "Pythia 8.215 (After)"], types=["error", "error",
-# "hist", "hist"], colors=["black", "red", "black", "red"],
-# line_styles=[[], [], [7, 7], [7, 7]], ratio_to_label="Ratio to\nPythia",
-# ratio_to_index=2)create_data_only_plot(filename=default_dir +
-# "basic_sub_width_softdrop_all_linear.pdf",
-# hists=compile_data_and_pythia([ parsed_hists[0], parsed_hists[2] ],
-# variables=['width_pre_SD', 'width_post_SD']), labels=["Before Soft
-# Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215
-# (After)"], types=["error", "error", "hist", "hist"], colors=["black",
-# "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]],
-# ratio_to_label="Ratio to\nPythia",
-# ratio_to_index=2)create_data_only_plot(filename=default_dir +
-# "basic_sub_thrust_softdrop_all_linear.pdf",
-# hists=compile_data_and_pythia([ parsed_hists[0], parsed_hists[2] ],
-# variables=['thrust_pre_SD', 'thrust_post_SD']), labels=["Before Soft
-# Drop", "After Soft Drop", "Pythia 8.215 (Before)", "Pythia 8.215
-# (After)"], types=["error", "error", "hist", "hist"], colors=["black",
-# "red", "black", "red"], line_styles=[[], [], [7, 7], [7, 7]],
-# ratio_to_label="Ratio to\nPythia", ratio_to_index=2)
-
-
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/e05/e05_10.pdf", hists=compile_hists_with_theory('e05_10', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/e05/e05_10.pdf", hists=compile_hists_with_theory('track_e05_10', parsed_hists), theory=True)
-
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/e1/e1_10.pdf", hists=compile_hists_with_theory('e1_10', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/e1/e1_10.pdf", hists=compile_hists_with_theory('track_e1_10', parsed_hists), theory=True)
-
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/e2/e2_10.pdf", hists=compile_hists_with_theory('e2_10', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/e2/e2_10.pdf", hists=compile_hists_with_theory('track_e2_10', parsed_hists), theory=True)
-
-
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/e1/e1_05.pdf", hists=compile_hists_with_theory('e1_05', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/e2/e2_05.pdf", hists=compile_hists_with_theory('e2_05', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/e05/e05_05.pdf", hists=compile_hists_with_theory('e05_05', parsed_hists), theory=True)
-
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/e1/e1_05.pdf", hists=compile_hists_with_theory('track_e1_05', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/e2/e2_05.pdf", hists=compile_hists_with_theory('track_e2_05', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/e05/e05_05.pdf", hists=compile_hists_with_theory('track_e05_05', parsed_hists), theory=True)
-
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/e1/e1_20.pdf", hists=compile_hists_with_theory('e1_20', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/e2/e2_20.pdf", hists=compile_hists_with_theory('e2_20', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/all/e05/e05_20.pdf", hists=compile_hists_with_theory('e05_20', parsed_hists), theory=True)
-
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/e1/e1_20.pdf", hists=compile_hists_with_theory('track_e1_20', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/e2/e2_20.pdf", hists=compile_hists_with_theory('track_e2_20', parsed_hists), theory=True)
-# create_multi_page_plot(filename=default_dir + "theta_g/linear/track/e05/e05_20.pdf", hists=compile_hists_with_theory('track_e05_20', parsed_hists), theory=True)
+create_multi_page_plot(filename=default_dir + "pfc_eta.pdf",
+                        hists=compile_hists('pfc_eta', parsed_pfc_hists))
 
 
 end = time.time()
